@@ -19,6 +19,7 @@ $MYSQL_COMMAND -h "$MYSQL_HOST" -u "$MYSQL_USER_NAME" --password="$MYSQL_PASSWOR
   user_name varchar(127) COLLATE utf8mb4_unicode_ci NOT NULL,
   password_hash varchar(127) COLLATE utf8mb4_unicode_ci NOT NULL,
   password_salt char(127) COLLATE utf8mb4_unicode_ci NOT NULL,
+  token char(127),
   UNIQUE (user_name, email),
   PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
