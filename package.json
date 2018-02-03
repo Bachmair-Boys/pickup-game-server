@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Bachmair-Boys/pickup-game-server#readme",
   "dependencies": {
+    "express": "^4.16.2",
     "mariasql": "^0.2.6"
   }
 }
