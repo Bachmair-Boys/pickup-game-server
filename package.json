@@ -1,0 +1,22 @@
+{
+  "name": "pickup-game-server",
+  "version": "0.1.0",
+  "description": "Backend for the PickupGame app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bachmair-Boys/pickup-game-server.git"
+  },
+  "author": "Bachmair's Boys",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Bachmair-Boys/pickup-game-server/issues"
+  },
+  "homepage": "https://github.com/Bachmair-Boys/pickup-game-server#readme",
+  "dependencies": {
+    "mariasql": "^0.2.6"
+  }
+}
