@@ -1,5 +1,4 @@
 /* database parameters */
-
 const DATABASE_HOST = '127.0.0.1';
 const DATABASE_USER = 'root';
 const DATABSE_PASSWORD = 'bachmair';
@@ -17,6 +16,7 @@ const USER_REGISTRATION_ERROR = 101;
 const DATABASE_LOOKUP_ERROR = 102;
 const AUTHENTICATION_ERROR = 103;
 const DATABASE_UPDATE_ERROR = 104;
+const INVALID_TOKEN_ERROR = 105;
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -28,6 +28,21 @@ const db = new Client({
   db: DATABSE_NAME
 });
 
+function isValidToken(userName, token, callback) {
+ const prep = db.prepare(
+      'SELECT token FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
+  );
+
+  db.query(prep({ user_name: userName }), (err, rows) => {
+    if (err || rows.length == 0)
+      callback(err || rows.length == 0, undefined);
+    else {
+      const expected_token = rows[0].token;
+      callback(err, token == expected_token);
+    }
+  });
+}
+
 app.get('is-user-name-in-use', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
@@ -36,9 +51,9 @@ app.get('is-user-name-in-use', (req, res) => {
 
   db.query({ user_name: req.body.user_name }, (err, rows) => {
     if (err)
-      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR });
-
-    res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
+      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+    else
+      res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
 });
 
 app.get('is-email-in-use', (req, res) => {
@@ -50,14 +65,15 @@ app.get('is-email-in-use', (req, res) => {
   db.query({ email: req.body.email }, (err, rows) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
-
-    res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
+    else
+      res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
 });
 
 app.post('register-user', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
-    'INSERT IGNORE INTO ' + USERS_TABLE_NAME + ' values (:email :user_name :password_hash :password_salt)'
+    'INSERT IGNORE INTO ' + USERS_TABLE_NAME + '(email, user_name, password_hash, password_salt)'
+    + ' values (:email, :user_name, :password_hash, :password_salt)'
   );
 
   const salt = crypto.randomBytes(127).toString('base64').substring(0, 127);
@@ -81,8 +97,10 @@ app.post('log-in', (req, res) => {
     );
 
   db.query(prep({ user_name = req.body.user_name }), (err, rows) => {
-    if (err)
+    if (err || rows.length == 0) {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+      return;
+    }
 
     const salt = rows[0].password_salt;
     const expected_hash = rows[0].password_hash;
@@ -108,20 +126,73 @@ app.post('log-in', (req, res) => {
 
 app.get('is-valid-token', (req, res) => {
   res.setHeader('Content-Type', 'application/json');     
-  const prep = db.prepare(
-      'SELECT token FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
-  );
-
-  db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+    else
+      res.send(JSON.stringify({ status: SUCCESS, is_valid_token: isValid }))
+  });
+});
+
+app.post('start-game', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) {
+    if (err)
+      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+    else if (!isValid)
+      res.send(JSON.stringify({ status: INVALID_TOKEN_ERROR }));
     else {
-      const token = rows[0].token;
-      res.send(JSON.stringify({ status: SUCCESS, is_valid_token: req.body.token == token }));
+      const idPrep = db.prepare('SELECT id FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name');
+      db.query(idPrep({ user_name: req.body.user_name }), (err, rows) => {
+        if (err || rows.length == 0) {
+          res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+          return;
+        }
+
+        const prep = db.prepare(
+          'INSERT INTO ' + GAMES_TABLE_NAME + ' (name, host_id, type, visibility, latitude, longitude, until)'
+          + ' values (:name, :host_id, :type, :visibility, :latitude, :longitude, :until) ON DUPLICATE KEY UPDATE'
+          + ' name = :name, type = :type, visibility = :visibility, latitude = :latitude, longitude = :longitude'
+          + ' until = :until'
+        );
+
+        db.query(prep({ 
+          name: req.body.name, 
+          host_id: rows[0].id, 
+          type: req.body.type, 
+          visibility: req.body.visibility, 
+          latitude: req.body.latitude,
+          longitude: req.body.longitude,
+          until: req.body.until
+        }), (err, rows) => {
+          if (err)
+            res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
+          else
+            res.send(JSON.stringify({ status: SUCCESS, token: token }));
+        });
+      });
     }
   });
-);
+});
 
+app.get('does-user-have-game-running', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const idPrep = db.prepare('SELECT id FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name');
+  db.query(idPrep({ user_name: req.body.user_name }), (err, rows) => {
+    if (err || rows.length == 0) {
+      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+      return;
+    }
 
+    const prep = db.prepare('SELECT host_id FROM ' + GAMES_TABLE_NAME 
+      + ' WHERE host_id = :host_id AND until > :now');
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-
+    db.query(prep({ user_name: req.body.user_name, now: now }), (err, rows) => {
+      if (err)
+        res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+      else
+        res.send(JSON.stringify({ status: SUCCESS, has_game_running: rows.length != 0 }));
+    });
+  });
+});
