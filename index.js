@@ -134,6 +134,7 @@ app.get('is-valid-token', (req, res) => {
   });
 });
 
+// TODO: make it return the game ID
 app.post('start-game', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   isValidToken(req.body.user_name, req.body.token, (err, isValid) {
@@ -196,3 +197,36 @@ app.get('does-user-have-game-running', (req, res) => {
     });
   });
 });
+
+app.get('find-games', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const prep = db.prepare('SELECT id, name, host_id, type, visibility, latitude, longitude, until) from ' 
+    + GAMES_TABLE_NAME + ' WHERE LAT_LNG_DIST(latitude, longitude, :latitude, :longitude) < :radius');
+  db.query(prep(latitude: req.body.latitude, longitude: req,body.longitude, radius: req.body.radius), (err, rows) => {
+    if (err) {
+      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+      return;
+    }
+
+    for (let i = 0; i < rows.length; ++i)
+      ((index) => {
+        const idPrep = db.prepare('SELECT user_name FROM ' + USERS_TABLE_NAME + ' where id = :host_id');
+        db.query(idPrep({ host_id: rows[index].host_id }), (row, err) => {
+          if (err || rows.length == 0)
+            res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+          else {
+            rows[index].user_name = row[0].user_name;
+            rows[index].host_id = undefined;
+          }
+        });
+      })(i);
+    res.send({ status: SUCCESS, games: JSON.stringify(rows) });
+  });
+});
+
+
+
+
+    
+
+
