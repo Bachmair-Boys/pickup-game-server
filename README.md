@@ -92,7 +92,7 @@ Parameters:
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if game was able to start, DATABASE_UPDATE_ERROR otherwise.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: _int_, The ID of the game.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**id**: _int_, The ID of the game.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _does-user-have-game-running_: GET, Checks whether a user has a game running.  
