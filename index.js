@@ -130,7 +130,7 @@ app.get('is-valid-token', (req, res) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
-      res.send(JSON.stringify({ status: SUCCESS, is_valid_token: isValid }))
+      res.send(JSON.stringify({ status: SUCCESS, is_valid: isValid }))
   });
 });
 
@@ -223,10 +223,3 @@ app.get('find-games', (req, res) => {
     res.send({ status: SUCCESS, games: JSON.stringify(rows) });
   });
 });
-
-
-
-
-    
-
-
