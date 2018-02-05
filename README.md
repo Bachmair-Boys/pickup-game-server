@@ -38,7 +38,7 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**password**: _string_, user's password  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if registration succeeded, USER_REGISTRATION_ERROR otherwise  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if registration succeeded, USER_REGISTRATION_ERROR otherwise  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _is-email-in-use_: GET, checks if the specified email is in use.  
@@ -46,8 +46,8 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**email**: _string_, email to check if in use.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise,  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is_in_use: _boolean_, true if email is in use, false otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**is_in_use**: _boolean_, true if email is in use, false otherwise.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _is-user-name-in-use_: GET, checks if the specified user-name is in use.  
@@ -55,8 +55,8 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**user\_name**: _string_, username to check if in use.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise,  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is_in_use: _boolean_, true if username is in use, false otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**is_in_use**: _boolean_, true if username is in use, false otherwise.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _log-in_: POST, Logs in a user. Returns a token to be used for actions that require authentication.  
@@ -65,8 +65,8 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**password**: _string_, user's password.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if log-in succeeded, otherwise AUTHENTICATION_ERROR or DATABASE_LOOKUP_ERROR  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token: _string_, token to be used for actions that require authentication.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if log-in succeeded, otherwise AUTHENTICATION_ERROR or DATABASE_LOOKUP_ERROR  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, token to be used for actions that require authentication.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _is-valid-token_: GET, Checks if a token is valid for a specified user.  
@@ -75,8 +75,8 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, user's login token.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is_valid: _boolean_, true if the token is valid, false otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if check succeeded, DATABASE_LOOKUP_ERROR otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**is_valid**: _boolean_, true if the token is valid, false otherwise.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _start-game_: POST, Starts a new game and returns the game ID.  
@@ -91,7 +91,7 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**until**: _Date_, The time the game lasts until.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if game was able to start, DATABASE_UPDATE_ERROR otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if game was able to start, DATABASE_UPDATE_ERROR otherwise.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: _int_, The ID of the game.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
@@ -100,8 +100,8 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**username**: _string_, The username of the user being checked.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if game check succeeded, DATABASE_LOOKUP_ERROR otherwise.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has_game_running: _boolean_, Whether the user has a game running.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if game check succeeded, DATABASE_LOOKUP_ERROR otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**has_game_running**: _boolean_, Whether the user has a game running.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _find-game_: GET, Finds games around a user.  
@@ -111,6 +111,6 @@ Parameters:
 &nbsp;&nbsp;&nbsp;&nbsp;**radius**: _float_, The maximum distance a game can be from the user, in kilometers.  
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: _int_, SUCCESS if able to look for games, DATABASE_LOOKUP_ERROR otherwise.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;games: _Game[]_, Array of games.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if able to look for games, DATABASE_LOOKUP_ERROR otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**games**: _Game[]_, Array of games.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
