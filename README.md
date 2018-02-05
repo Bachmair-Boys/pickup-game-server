@@ -28,6 +28,8 @@ _Game_: {
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitude: _float_, longitude of game.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;until: _Date_, time that game lasts until  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
+
+### Methods
   
 _register-user_: GET, Registers a user.  
 Parameters:  
