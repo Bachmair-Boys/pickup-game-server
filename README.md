@@ -12,7 +12,7 @@ Edit `setup_db.sh` and modify the variables `MYSQL_USER_NAME` and `MYSQL_PASSWOR
 ./setup_db.sh
 ```
 
-Then, to run, do:
+## Running
 ```
 node index.js
 ```
