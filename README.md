@@ -7,7 +7,12 @@ git clone https://github.com/Bachmair-Boys/pickup-game-server
 cd pickup-game-server
 ```
 
-Edit `setup_db.sh` and modify the variables `MYSQL_USER_NAME` and `MYSQL_PASSWORD` so that they match your MariaDB username and password. To run, do:
+Edit `setup_db.sh` and modify the variables `MYSQL_USER_NAME` and `MYSQL_PASSWORD` so that they match your MariaDB username and password. Set up the database:
+```
+./setup_db.sh
+```
+
+Then, to run, do:
 ```
 node index.js
 ```
