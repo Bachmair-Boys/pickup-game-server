@@ -34,13 +34,10 @@ function isValidToken(userName, token, callback) {
   );
 
   db.query(prep({ user_name: userName }), (err, rows) => {
-	console.log(rows);
     if (err || rows.length == 0)
       callback(err || rows.length == 0, undefined);
     else {
       const expected_token = rows[0].token;
-	  console.log(expected_token); //
-	  console.log(token); //
       callback(err, token == expected_token);
     }
   });
@@ -130,10 +127,9 @@ app.post('/log-in', (req, res) => {
   });
 });
 
-//log-out not functioning
 app.post('/log-out', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  isValidToken(req.query.user_name, req.query.token, (err, isValid) => {
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
 	if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else if (!isValid)
