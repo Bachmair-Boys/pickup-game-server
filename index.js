@@ -134,7 +134,6 @@ app.get('is-valid-token', (req, res) => {
   });
 });
 
-// TODO: make it return the game ID
 app.post('start-game', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   isValidToken(req.body.user_name, req.body.token, (err, isValid) {
@@ -165,11 +164,11 @@ app.post('start-game', (req, res) => {
           latitude: req.body.latitude,
           longitude: req.body.longitude,
           until: req.body.until
-        }), (err, rows) => {
+        }), (err, insertInfo) => {
           if (err)
             res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
           else
-            res.send(JSON.stringify({ status: SUCCESS, token: token }));
+            res.send(JSON.stringify({ status: SUCCESS, game_id: insertInfo.info.insertId }));
         });
       });
     }
