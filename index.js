@@ -174,7 +174,7 @@ app.post('/start-game', (req, res) => {
         const prep = db.prepare(
           'INSERT INTO ' + GAMES_TABLE_NAME + ' (name, host_id, type, visibility, latitude, longitude, until)'
           + ' values (:name, :host_id, :type, :visibility, :latitude, :longitude, :until) ON DUPLICATE KEY UPDATE'
-          + ' name = :name, type = :type, visibility = :visibility, latitude = :latitude, longitude = :longitude'
+          + ' name = :name, type = :type, visibility = :visibility, latitude = :latitude, longitude = :longitude,'
           + ' until = :until'
         );
 
