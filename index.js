@@ -1,7 +1,7 @@
 /* database parameters */
 const DATABASE_HOST = '127.0.0.1';
 const DATABASE_USER = 'root';
-const DATABSE_PASSWORD = 'bachmair';
+const DATABASE_PASSWORD = 'bachmair';
 const DATABASE_NAME='pickup_game';
 const USERS_TABLE_NAME = 'users';
 const GAMES_TABLE_NAME = 'games'
@@ -22,10 +22,10 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 const db = new Client({
-  host: DATABSE_HOST,
+  host: DATABASE_HOST,
   user: DATABASE_USER,
   password: DATABASE_PASSWORD,
-  db: DATABSE_NAME
+  db: DATABASE_NAME
 });
 
 function isValidToken(userName, token, callback) {
@@ -54,6 +54,7 @@ app.get('is-user-name-in-use', (req, res) => {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
       res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
+  });
 });
 
 app.get('is-email-in-use', (req, res) => {
@@ -67,6 +68,7 @@ app.get('is-email-in-use', (req, res) => {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
       res.send(JSON.stringify({ status: SUCCESS, is_in_use: rows.length != 0 }));
+  });
 });
 
 app.post('register-user', (req, res) => {
