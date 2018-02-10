@@ -19,7 +19,7 @@ const DATABASE_UPDATE_ERROR = 104;
 const INVALID_TOKEN_ERROR = 105;
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: false }));
 
 const db = new Client({
   host: DATABASE_HOST,
@@ -224,3 +224,5 @@ app.get('find-games', (req, res) => {
     res.send({ status: SUCCESS, games: JSON.stringify(rows) });
   });
 });
+
+app.listen(8080);
