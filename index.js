@@ -85,10 +85,10 @@ app.post('register-user', (req, res) => {
       if (err)
         res.send(JSON.stringify({ status: USER_REGISTRATION_ERROR }));
       else
-        res.send(JSON.stringify({ status: SUCCESS });
+        res.send(JSON.stringify({ status: SUCCESS }));
     }
   );
-);
+});
 
 app.post('log-in', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
@@ -96,7 +96,7 @@ app.post('log-in', (req, res) => {
       'SELECT password_hash, password_salt FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
     );
 
-  db.query(prep({ user_name = req.body.user_name }), (err, rows) => {
+  db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
     if (err || rows.length == 0) {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
       return;
@@ -114,7 +114,7 @@ app.post('log-in', (req, res) => {
         'UPDATE ' + USERS_TABLE_NAME + ' SET token=:token WHERE user_name=:user_name'
       );
 
-      db.query(updatePrep({ token: token, user_name, req.body.user_name }), (err, rows) => {
+      db.query(updatePrep({ token: token, user_name: req.body.user_name }), (err, rows) => {
         if (err)
           res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
         else
@@ -126,7 +126,7 @@ app.post('log-in', (req, res) => {
 
 app.get('is-valid-token', (req, res) => {
   res.setHeader('Content-Type', 'application/json');     
-  isValidToken(req.body.user_name, req.body.token, (err, isValid) {
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
@@ -136,7 +136,7 @@ app.get('is-valid-token', (req, res) => {
 
 app.post('start-game', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  isValidToken(req.body.user_name, req.body.token, (err, isValid) {
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else if (!isValid)
@@ -201,7 +201,7 @@ app.get('find-games', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare('SELECT id, name, host_id, type, visibility, latitude, longitude, until) from ' 
     + GAMES_TABLE_NAME + ' WHERE LAT_LNG_DIST(latitude, longitude, :latitude, :longitude) < :radius');
-  db.query(prep(latitude: req.body.latitude, longitude: req,body.longitude, radius: req.body.radius), (err, rows) => {
+  db.query(prep({ latitude: req.body.latitude, longitude: req.body.longitude, radius: req.body.radius }), (err, rows) => {
     if (err) {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
       return;
