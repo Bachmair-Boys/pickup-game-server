@@ -64,7 +64,7 @@ app.get('/is-email-in-use', (req, res) => {
     'SELECT email FROM ' + USERS_TABLE_NAME + ' WHERE email = :email'
   );
 
-  db.query({ email: req.query.email }, (err, rows) => {
+  db.query(prep({ email: req.query.email }), (err, rows) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
