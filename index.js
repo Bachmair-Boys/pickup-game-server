@@ -130,19 +130,19 @@ app.post('/log-in', (req, res) => {
 app.post('/log-out', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
-	if (err)
+    if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else if (!isValid)
       res.send(JSON.stringify({ status: INVALID_TOKEN_ERROR }));
     else {
-	  const prep = db.prepare('UPDATE ' + USERS_TABLE_NAME + ' SET token = NULL WHERE user_name = :user_name');
-	  db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
-		if (err)
-		  res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
-	    else
-		  res.send(JSON.stringify({ status: SUCCESS }));
-	  });
-	}
+      const prep = db.prepare('UPDATE ' + USERS_TABLE_NAME + ' SET token = NULL WHERE user_name = :user_name');
+      db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
+        if (err)
+          res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
+        else
+          res.send(JSON.stringify({ status: SUCCESS }));
+      });
+    }
   });
 });
 
