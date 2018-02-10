@@ -49,7 +49,8 @@ app.get('/is-user-name-in-use', (req, res) => {
     'SELECT user_name FROM ' + USERS_TABLE_NAME + ' WHERE user_name = :user_name'
   );
 
-  db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
+  db.query(prep({ user_name: req.query.user_name }), (err, rows) => {
+    console.log(rows);
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
@@ -63,7 +64,7 @@ app.get('/is-email-in-use', (req, res) => {
     'SELECT email FROM ' + USERS_TABLE_NAME + ' WHERE email = :email'
   );
 
-  db.query({ email: req.body.email }, (err, rows) => {
+  db.query({ email: req.query.email }, (err, rows) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
@@ -128,7 +129,7 @@ app.post('/log-in', (req, res) => {
 
 app.get('/is-valid-token', (req, res) => {
   res.setHeader('Content-Type', 'application/json');     
-  isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
+  isValidToken(req.query.user_name, req.query.token, (err, isValid) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
@@ -180,7 +181,7 @@ app.post('/start-game', (req, res) => {
 app.get('/does-user-have-game-running', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const idPrep = db.prepare('SELECT id FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name');
-  db.query(idPrep({ user_name: req.body.user_name }), (err, rows) => {
+  db.query(idPrep({ user_name: req.query.user_name }), (err, rows) => {
     if (err || rows.length == 0) {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
       return;
@@ -190,7 +191,7 @@ app.get('/does-user-have-game-running', (req, res) => {
       + ' WHERE host_id = :host_id AND until > :now');
     const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    db.query(prep({ user_name: req.body.user_name, now: now }), (err, rows) => {
+    db.query(prep({ user_name: req.query.user_name, now: now }), (err, rows) => {
       if (err)
         res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
       else
@@ -203,7 +204,7 @@ app.get('/find-games', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare('SELECT id, name, host_id, type, visibility, latitude, longitude, until) from ' 
     + GAMES_TABLE_NAME + ' WHERE LAT_LNG_DIST(latitude, longitude, :latitude, :longitude) < :radius');
-  db.query(prep({ latitude: req.body.latitude, longitude: req.body.longitude, radius: req.body.radius }), (err, rows) => {
+  db.query(prep({ latitude: req.query.latitude, longitude: req.query.longitude, radius: req.query.radius }), (err, rows) => {
     if (err) {
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
       return;
