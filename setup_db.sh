@@ -10,7 +10,7 @@ DATABASE_NAME="pickup_game"
 USERS_TABLE_NAME="users"
 GAMES_TABLE_NAME="games"
 
-$MYSQL_COMMAND -h "$MYSQL_HOST" -u "$MYSQL_USER_NAME" --password="$MYSQL_PASSWORD"  << END_OF_PICKUP_DB_SCRIPT
+"$MYSQL_COMMAND" -h "$MYSQL_HOST" -u "$MYSQL_USER_NAME" --password="$MYSQL_PASSWORD"  << END_OF_PICKUP_DB_SCRIPT
   CREATE DATABASE $DATABASE_NAME;
   USE $DATABASE_NAME;
   CREATE TABLE $USERS_TABLE_NAME (
@@ -32,7 +32,7 @@ $MYSQL_COMMAND -h "$MYSQL_HOST" -u "$MYSQL_USER_NAME" --password="$MYSQL_PASSWOR
   visibility enum('PUBLIC','PRIVATE') COLLATE utf8mb4_unicode_ci NOT NULL,
   latitude double NOT NULL,
   longitude double NOT NULL,
-  until date NOT NULL,
+  until datetime NOT NULL,
   UNIQUE (host_id),
   PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
