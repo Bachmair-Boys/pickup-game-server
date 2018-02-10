@@ -49,7 +49,7 @@ app.get('/is-user-name-in-use', (req, res) => {
     'SELECT user_name FROM ' + USERS_TABLE_NAME + ' WHERE user_name = :user_name'
   );
 
-  db.query({ user_name: req.body.user_name }, (err, rows) => {
+  db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
     if (err)
       res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
     else
