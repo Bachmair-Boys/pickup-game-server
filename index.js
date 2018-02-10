@@ -75,20 +75,21 @@ app.get('/is-email-in-use', (req, res) => {
 app.post('/register-user', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
-    'INSERT IGNORE INTO ' + USERS_TABLE_NAME + '(email, user_name, password_hash, password_salt)'
-    + ' values (:email, :user_name, :password_hash, :password_salt)'
+    'INSERT IGNORE INTO ' + USERS_TABLE_NAME + '(email, user_name, password_hash, password_salt, token)'
+    + ' values (:email, :user_name, :password_hash, :password_salt, :token)'
   );
 
   const salt = crypto.randomBytes(127).toString('base64').substring(0, 127);
   const hash = crypto.createHash('sha512').update(salt + req.body.password).digest('base64');
+  const token = crypto.randomBytes(127).toString('base64').substring(0, 127);
 
   db.query(
-    prep({ email: req.body.email, user_name: req.body.user_name, password_hash: hash, password_salt: salt }),
+    prep({ email: req.body.email, user_name: req.body.user_name, password_hash: hash, password_salt: salt, token: token }),
     (err, rows) => {
       if (err)
         res.send(JSON.stringify({ status: USER_REGISTRATION_ERROR }));
       else
-        res.send(JSON.stringify({ status: SUCCESS }));
+        res.send(JSON.stringify({ status: SUCCESS, token: token }));
     }
   );
 });
