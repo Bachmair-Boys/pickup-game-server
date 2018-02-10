@@ -83,7 +83,7 @@ app.post('/register-user', (req, res) => {
   const hash = crypto.createHash('sha512').update(salt + req.body.password).digest('base64');
 
   db.query(
-    prep({ email: req.body.email, user_name: req.user_name, password_hash: hash, password_salt: salt }),
+    prep({ email: req.body.email, user_name: req.body.user_name, password_hash: hash, password_salt: salt }),
     (err, rows) => {
       if (err)
         res.send(JSON.stringify({ status: USER_REGISTRATION_ERROR }));
