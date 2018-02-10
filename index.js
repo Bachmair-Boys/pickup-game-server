@@ -197,6 +197,25 @@ app.post('/start-game', (req, res) => {
   });
 });
 
+app.post('/end-game', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
+    if (err)
+      res.send(JSON.stringify({ status: DATABASE_LOOKUP_ERROR }));
+    else if (!isValid)
+      res.send(JSON.stringify({ status: INVALID_TOKEN_ERROR }));
+    else {
+	  const prep = db.prepare('DELETE FROM ' + GAMES_TABLE_NAME + ' WHERE id = :game_id');
+	  db.query(prep({ game_id: req.body.game_id }), (err, rows) => {
+		if (err)
+		  res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
+		else
+		  res.send(JSON.stringify({ status: SUCCESS }));
+	  });
+	}
+  });
+});
+
 app.get('/does-user-have-game-running', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const idPrep = db.prepare('SELECT id FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name');
