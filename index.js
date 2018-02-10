@@ -43,7 +43,7 @@ function isValidToken(userName, token, callback) {
   });
 }
 
-app.get('is-user-name-in-use', (req, res) => {
+app.get('/is-user-name-in-use', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
     'SELECT user_name FROM ' + USERS_TABLE_NAME + ' WHERE user_name = :user_name'
@@ -57,7 +57,7 @@ app.get('is-user-name-in-use', (req, res) => {
   });
 });
 
-app.get('is-email-in-use', (req, res) => {
+app.get('/is-email-in-use', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
     'SELECT email FROM ' + USERS_TABLE_NAME + ' WHERE email = :email'
@@ -71,7 +71,7 @@ app.get('is-email-in-use', (req, res) => {
   });
 });
 
-app.post('register-user', (req, res) => {
+app.post('/register-user', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
     'INSERT IGNORE INTO ' + USERS_TABLE_NAME + '(email, user_name, password_hash, password_salt)'
@@ -92,7 +92,7 @@ app.post('register-user', (req, res) => {
   );
 });
 
-app.post('log-in', (req, res) => {
+app.post('/log-in', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
       'SELECT password_hash, password_salt FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
@@ -126,7 +126,7 @@ app.post('log-in', (req, res) => {
   });
 });
 
-app.get('is-valid-token', (req, res) => {
+app.get('/is-valid-token', (req, res) => {
   res.setHeader('Content-Type', 'application/json');     
   isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
     if (err)
@@ -136,7 +136,7 @@ app.get('is-valid-token', (req, res) => {
   });
 });
 
-app.post('start-game', (req, res) => {
+app.post('/start-game', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   isValidToken(req.body.user_name, req.body.token, (err, isValid) => {
     if (err)
@@ -177,7 +177,7 @@ app.post('start-game', (req, res) => {
   });
 });
 
-app.get('does-user-have-game-running', (req, res) => {
+app.get('/does-user-have-game-running', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const idPrep = db.prepare('SELECT id FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name');
   db.query(idPrep({ user_name: req.body.user_name }), (err, rows) => {
@@ -199,7 +199,7 @@ app.get('does-user-have-game-running', (req, res) => {
   });
 });
 
-app.get('find-games', (req, res) => {
+app.get('/find-games', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare('SELECT id, name, host_id, type, visibility, latitude, longitude, until) from ' 
     + GAMES_TABLE_NAME + ' WHERE LAT_LNG_DIST(latitude, longitude, :latitude, :longitude) < :radius');
