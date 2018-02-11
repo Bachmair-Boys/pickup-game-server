@@ -29,8 +29,8 @@ const db = new Client({
 });
 
 function isValidToken(userName, token, callback) {
- const prep = db.prepare(
-      'SELECT token FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
+  const prep = db.prepare(
+    'SELECT token FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
   );
 
   db.query(prep({ user_name: userName }), (err, rows) => {
@@ -97,7 +97,7 @@ app.post('/register-user', (req, res) => {
 app.post('/log-in', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const prep = db.prepare(
-      'SELECT password_hash, password_salt FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
+    'SELECT password_hash, password_salt FROM ' + USERS_TABLE_NAME + ' where user_name = :user_name'
   );
 
   db.query(prep({ user_name: req.body.user_name }), (err, rows) => {
@@ -206,14 +206,14 @@ app.post('/end-game', (req, res) => {
     else if (!isValid)
       res.send(JSON.stringify({ status: INVALID_TOKEN_ERROR }));
     else {
-	  const prep = db.prepare('DELETE FROM ' + GAMES_TABLE_NAME + ' WHERE id = :game_id');
-	  db.query(prep({ game_id: req.body.game_id }), (err, rows) => {
-		if (err)
-		  res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
-		else
-		  res.send(JSON.stringify({ status: SUCCESS }));
-	  });
-	}
+      const prep = db.prepare('DELETE FROM ' + GAMES_TABLE_NAME + ' WHERE id = :game_id');
+      db.query(prep({ game_id: req.body.game_id }), (err, rows) => {
+        if (err)
+          res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
+        else
+          res.send(JSON.stringify({ status: SUCCESS }));
+      });
+    }
   });
 });
 

@@ -44,6 +44,7 @@ Parameters:
 Return:  
 &nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if registration succeeded, USER_REGISTRATION_ERROR otherwise  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, token to be used for actions that require authentication.
 &nbsp;&nbsp;&nbsp;&nbsp;}  
   
 _is-email-in-use_: GET, checks if the specified email is in use.  
@@ -73,6 +74,16 @@ Return:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if log-in succeeded, otherwise AUTHENTICATION_ERROR or DATABASE_LOOKUP_ERROR  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, token to be used for actions that require authentication.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
+
+_log-out_: POST, Logs out a user. 
+Parameters:  
+&nbsp;&nbsp;&nbsp;&nbsp;**user\_name**: _string_, user's username.  
+&nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, user's login token.
+Return:  
+&nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if log-out succeeded, otherwise INVALID_TOKEN_ERROR or DATABASE_LOOKUP_ERROR   
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+
   
 _is-valid-token_: GET, Checks if a token is valid for a specified user.  
 Parameters:  
@@ -99,7 +110,17 @@ Return:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS if game was able to start, DATABASE_UPDATE_ERROR otherwise.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**id**: _int_, The ID of the game.  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
-  
+
+_end-game_: POST, Ends a game.
+Parameters:  
+&nbsp;&nbsp;&nbsp;&nbsp;**username**: _string_, The username of the user ending the game.  
+&nbsp;&nbsp;&nbsp;&nbsp;**token**: _string_, The login token for the user.  
+&nbsp;&nbsp;&nbsp;&nbsp;**game_id**: _int_, The ID of the game being ended.  
+Return:  
+&nbsp;&nbsp;&nbsp;&nbsp;JSON-Encoded Data: {   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status**: _int_, SUCCESS was ended, DATABASE_UPDATE_ERROR otherwise.  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+
 _does-user-have-game-running_: GET, Checks whether a user has a game running.  
 Parameters:  
 &nbsp;&nbsp;&nbsp;&nbsp;**username**: _string_, The username of the user being checked.  
