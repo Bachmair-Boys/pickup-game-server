@@ -191,7 +191,7 @@ app.post('/start-game', (req, res) => {
           if (err)
             res.send(JSON.stringify({ status: DATABASE_UPDATE_ERROR }));
           else
-            res.send(JSON.stringify({ status: SUCCESS, game_id: insertInfo.info.insertId }));
+            res.send(JSON.stringify({ status: SUCCESS, id: insertInfo.info.insertId }));
         });
       });
     }
